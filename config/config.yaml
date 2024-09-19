@@ -1,0 +1,68 @@
+# Specifies which crazyflies to connect to, and what to name them in ROS
+uris :
+  crazyflie1 : 'radio://0/1/2M/E7E7E7E7E7'
+
+# Enable logs for publishing
+pub_controller_rpy_rate:
+  enable: True
+  period_in_ms: 10
+
+pub_controller_rpyt:
+  enable: True
+  period_in_ms: 10
+
+pub_kalman_position:
+  enable: True
+  period_in_ms: 100
+
+pub_motor_power:
+  enable: True
+  period_in_ms: 10
+
+pub_pos_ctl:
+  enable: True
+  period_in_ms: 100
+
+pub_stabilizer:
+  enable: True
+  period_in_ms: 10
+  
+pub_acc:
+  enable: True
+  period_in_ms: 200
+  
+pub_gyro:
+  enable: True
+  period_in_ms: 100
+  
+pub_state_est:
+  enable: True
+  period_in_ms: 100
+
+pub_range:
+  enable: True
+  period_in_ms: 100
+
+pub_mag:
+  enable: True
+  period_in_ms: 100
+  
+pub_pos_est_alt:
+  enable: True
+  period_in_ms: 100
+
+pub_state_est_z:
+  enable: True
+  period_in_ms: 100
+
+#pub_controller:
+  #enable: True
+  #period_in_ms: 100
+
+pub_motion:
+  enable: True
+  period_in_ms: 100
+  
+pub_ext_pos:
+  enable: True
+  period_in_ms: 100
