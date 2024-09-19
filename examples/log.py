@@ -47,7 +47,7 @@ from rospy_crazyflie.srv import *
 from rospy_crazyflie.msg import *
 
 if __name__ == "__main__":
-    rospy.init_node('eag_example')
+    rospy.init_node('log_example')
 
     # Connect to a Crazyflie on the server
     crazyflies = rospy_crazyflie.client.get_crazyflies(server='/crazyflie_server')
@@ -64,17 +64,34 @@ if __name__ == "__main__":
                     is the type. Valid types are specified in cflib.crazyflie.log
 
     @period_in_ms   Period between transmissions, specified in milliseconds
+    @callback       Optional callback which is called whenever variable(s) are updated
     """
-    config_name = 'eag'
-    variables = [LogVariable('eag.eag', 'float')]
-    period_in_ms = 10.
-
-    def eag_callback(data, timestamp):
+    # Add a log for MultiRanger sensor data
+    name = 'ranger'
+    variables = [LogVariable('range.left', 'float'),
+                LogVariable('range.right', 'float'),
+                LogVariable('range.front', 'float'),
+                LogVariable('range.back', 'float'),
+                LogVariable('range.up', 'float'),
+                LogVariable('range.zrange', 'float')]
+    period_ms = 10
+    
+    # Set up callback to print data to terminal
+    def ranger_callback(data, timestamp):
         # This is called by the CrazyflieClient object when new data is available
-        print("Eag Data: {}, Crazyflie Timestamp: {}".format(data['eag.eag'], timestamp))
-
+        print("Ranger Data: L:{}, R:{}, F:{}, B:{}, U:{}, D:{}".format(data['range.left'],
+              data['range.right'], data['range.front'], data['range.back'], 
+              data['range.up'], data['range.zrange']))
+        print("Enter anything to exit")
+              
     # Configures the crazyflie to log the data
-    client.add_log_config(config_name, variables, period_in_ms, callback = eag_callback)
+    client.add_log_config(
+        name,
+        variables,
+        period_ms,
+        callback=ranger_callback
+    )
+
 
     input("enter anything to exit")
     del client

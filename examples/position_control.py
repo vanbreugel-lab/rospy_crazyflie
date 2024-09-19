@@ -39,29 +39,29 @@ controller is ideal. Errors will build over time.
 
 import rospy
 import time
-import rospy_crazyflie.crazyflie_client as crazyflie_client
-from rospy_crazyflie.crazyflie_client import CrazyflieClient
+import rospy_crazyflie.client
 import sys
 
 if __name__ == "__main__":
     rospy.init_node("position_control_example")
 
-    # Get all crazyflies on the /crazyflie_server
-    crazyflies = crazyflie_client.get_crazyflies(server='/crazyflie_server')
-    # Connect to first crazyflie
-    client = CrazyflieClient(crazyflies[0])
+    # Connect to the crazyflie
+    crazyflies = rospy_crazyflie.client.get_crazyflies(server='/crazyflie_server')
+    client = rospy_crazyflie.client.Client(crazyflies[0])
 
-    # Commands are queued and executed in sequence. They are non-blocking
+    # Give command and wait until each is finished before executing next
     client.take_off(.5) # Takeoff to .5 meters
-    client.forward(.5)  # go .5 meters forward
-    client.back(.5)     # go .5 meters backward
-    client.left(.5)     # go .5 meters left
-    client.right(.5)    # go .5 meters right
+    client.wait()
+    client.forward(.2)  # go .5 meters forward
+    client.wait()
+    client.back(.2)     # go .5 meters backward
+    client.wait()
+    client.left(.2)     # go .5 meters left
+    client.wait()
+    client.right(.2)    # go .5 meters right
+    client.wait()
 
     # Many more position and velocity commands are implemented in CrazyflieClient!
-
-    # Wait for all the commands to complete
-    client.wait()
 
     client.land()
     client.wait()
