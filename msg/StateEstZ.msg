@@ -1,0 +1,14 @@
+time stamp
+uint32 cfstamp
+int16 x
+int16 y
+int16 z
+int16 vx
+int16 vy
+int16 vz
+int16 ax
+int16 ay
+int16 az
+int16 rateRoll
+int16 ratePitch
+int16 rateYaw

@@ -3,3 +3,10 @@ uint32 cfstamp
 float32 stateX
 float32 stateY
 float32 stateZ
+float32 statePX
+float32 statePY
+float32 statePZ
+float32 q0
+float32 q1
+float32 q2
+float32 q3

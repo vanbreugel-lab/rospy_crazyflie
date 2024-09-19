@@ -61,6 +61,17 @@ catkin_python_setup()
    MotorPower.msg
    posCtl.msg
    Stabilizer.msg
+   Acceleration.msg
+   Gyro.msg
+   StateEst.msg
+   Range.msg
+   Mag.msg
+   PosEstAlt.msg
+   StateEstZ.msg
+   Motion.msg
+   ExtPos.msg
+   #Controller.msg
+
  )
 
 ## Generate services in the 'srv' folder

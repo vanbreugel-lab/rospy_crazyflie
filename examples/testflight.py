@@ -26,12 +26,44 @@ The views and conclusions contained in the software and documentation are those
 of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the <project name> project.
 """
-import yaml
-class MotionPrimitive:
-    def __init__(self):
-        self.dict = {}
-    def serialize(self):
-        return yaml.dump(self.dict)
 
-def deserialize(string):
-    return yaml.load(string, Loader=yaml.SafeLoader)
+"""
+This is a demontration of how to make a crazyflie takeoff and land.
+"""
+import rospy
+import time
+import rospy_crazyflie.client
+import sys
+
+if __name__ == "__main__":
+    rospy.init_node('rospy_crazyflie_example')
+
+    # Connect to the crazyflie
+    crazyflies = rospy_crazyflie.client.get_crazyflies(server='/crazyflie_server')
+    client = rospy_crazyflie.client.Client(crazyflies[0])
+
+    # Causes the crazyflie to takeoff to height of .5 meters
+    client.take_off(.25)
+    client.wait()
+    client.forward(.5)  # go .2 meters forward
+    client.wait()
+    client.back(.5)     # go .2 meters backward
+    client.wait()
+    client.left(.5)     # go .2 meters left
+    client.wait()
+    client.right(.5)    # go .2 meters right
+    client.wait()
+    client.circle_left(.25) # circle left radius .1m
+    client.wait()
+
+    input("enter anything to exit")
+
+    # Causes the crazyflie to land
+    client.land()
+
+    # Waits until current command is complete
+    client.wait()
+
+    # Exit program
+    del client
+    sys.exit(0)

@@ -1,0 +1,11 @@
+time stamp
+uint32 cfstamp
+float32 ax
+float32 ay
+float32 az
+float32 vx
+float32 vy
+float32 vz
+float32 pitch
+float32 roll
+float32 yaw
