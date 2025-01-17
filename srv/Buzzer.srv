@@ -1,0 +1,7 @@
+int8 number
+int16 frequency
+float64 duration
+bool stop
+---
+bool success
+string message

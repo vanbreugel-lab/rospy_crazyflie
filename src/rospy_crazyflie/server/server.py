@@ -216,12 +216,19 @@ class Server:
         frequency = int(req.frequency)
         duration = req.duration
         number = req.number
+        stop = req.stop
 
-        # Play a sound at set frequency for set duration
+        # Play a sound at set frequency
         cf.param.set_value('sound.freq', str(frequency))
         cf.param.set_value('sound.effect', str(number))
-        time.sleep(duration)  
-        cf.param.set_value('sound.effect', '0')
+
+        # Wait for set duration
+        time.sleep(duration)
+
+        # Stop the sound
+        if stop:
+            cf.param.set_value('sound.effect', '0')
+
         del(cf)
         
         return BuzzerResponse(success=True, message="Buzzer triggered: " + str(frequency))
@@ -229,4 +236,5 @@ class Server:
     def buzzer_server(self):
         rospy.Service('play_buzzer', Buzzer, self.handle_buzzer_request)
         rospy.loginfo("Buzzer trigger initiated.")
+        rospy.spin()
 
