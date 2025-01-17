@@ -38,7 +38,9 @@ from .control import Control
 import cflib.crtp
 
 from cflib.crazyflie import Crazyflie
-from rospy_crazyflie.srv import GetCrazyflies, GetCrazyfliesResponse
+from rospy_crazyflie.srv import GetCrazyflies, GetCrazyfliesResponse, Buzzer, BuzzerResponse
+from std_srvs.srv import Trigger, TriggerResponse
+
 
 class Server:
 
@@ -73,6 +75,8 @@ class Server:
             cf.connection_lost.add_callback(self._connection_lost)
             cf.open_link(uri)
             self._crazyflies[uri] = (name, cf)
+                      
+        self.buzzer_server()
 
     def _get_crazyflies_cb (self, request) :
         response = GetCrazyfliesResponse()
@@ -199,3 +203,31 @@ class Server:
                     pass
                 cf.close_link()
                 del(cf)
+                      
+    def handle_buzzer_request(self, req):
+        for name in self._uris.keys():
+            uri = self._uris[name]
+
+        cf = self._crazyflies[uri][1]
+        if cf is None:
+            rospy.logwarn("Crazyflie is not connected.")
+            return BuzzerResponse(success=False, message="No connection to Crazyflie.")
+
+        frequency = int(req.frequency)
+        duration = req.duration
+        
+        rospy.loginfo("Triggering the buzzer.")
+        cf.param.set_value('sound.freq', str(frequency))
+        time.sleep(0.1) 
+        actual_freq = cf.param.get_value('sound.freq')  # Check the applied value
+        cf.param.set_value('sound.effect', '2')
+        time.sleep(duration)  
+        #cf.param.set_value('sound.effect', '0')
+        del(cf)
+        
+        return BuzzerResponse(success=True, message="Buzzer triggered: " + str(actual_freq))
+
+    def buzzer_server(self):
+        rospy.Service('play_buzzer', Buzzer, self.handle_buzzer_request)
+        rospy.loginfo("Buzzer trigger initiated.")
+

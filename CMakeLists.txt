@@ -82,6 +82,7 @@ catkin_python_setup()
    SendHoverSetpoint.srv
    GetCrazyflies.srv
    VelocityControl.srv
+   Buzzer.srv
  )
 
 ## Generate actions in the 'action' folder
