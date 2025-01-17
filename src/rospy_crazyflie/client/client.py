@@ -88,6 +88,14 @@ class Client:
         )
         self._send_hover_setpoint_client.wait_for_service()
 
+        # Buzzer
+        self._play_buzzer = rospy.ServiceProxy(
+            '/play_buzzer',
+            Buzzer,
+        )
+        # response = self._play_buzzer.call(BuzzerResponse(), timeout=1.0)
+        self._play_buzzer.wait_for_service()
+
         self._mc_goals = []
         self._current_mc_goal = None
         self._log_subs = {}
@@ -532,3 +540,20 @@ class Client:
     def wait(self):
         while self.action_in_progress():
             time.sleep(.1)
+
+    def play_buzzer(self, number=12, frequency=500, duration=1.0, stop=True):
+        """
+        Play sound from buzzer.
+
+        :param int number: sound effect number. 12 will play sound at set frequency
+        https://www.bitcraze.io/documentation/tutorials/getting-started-with-buzzer-deck/?utm_source=chatgpt.com
+
+        :param int frequency: pitch frequency [hz]
+        :param float duration: duration [s]
+        :param bool stop: whether to stop sound after duration has elapse
+        :return:
+        """
+        # action = Buzzer(number, frequency, duration, stop)
+        # self._play_buzzer(action.serialize())
+
+        self._play_buzzer(number, frequency, duration, stop)

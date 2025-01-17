@@ -51,7 +51,6 @@ class Server:
         # Dictionaries to hold the crazyflies and related objects
         # self._address = rospy.get_param('~address')
         self._uris = rospy.get_param('~uris')
-        print(self._uris)
         self._crazyflies = {}
         self._crazyflie_logs = {}
         self._controllers = {}
@@ -223,7 +222,8 @@ class Server:
         cf.param.set_value('sound.effect', str(number))
 
         # Wait for set duration
-        time.sleep(duration)
+        # time.sleep(duration)
+        rospy.sleep(duration)
 
         # Stop the sound
         if stop:
@@ -236,5 +236,5 @@ class Server:
     def buzzer_server(self):
         rospy.Service('play_buzzer', Buzzer, self.handle_buzzer_request)
         rospy.loginfo("Buzzer trigger initiated.")
-        rospy.spin()
+        # rospy.spin()
 
