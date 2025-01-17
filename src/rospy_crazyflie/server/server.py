@@ -39,7 +39,7 @@ import cflib.crtp
 
 from cflib.crazyflie import Crazyflie
 from rospy_crazyflie.srv import GetCrazyflies, GetCrazyfliesResponse, Buzzer, BuzzerResponse
-from std_srvs.srv import Trigger, TriggerResponse
+# from std_srvs.srv import Trigger, TriggerResponse
 
 
 class Server:
@@ -215,17 +215,16 @@ class Server:
 
         frequency = int(req.frequency)
         duration = req.duration
-        
-        rospy.loginfo("Triggering the buzzer.")
+        number = req.number
+
+        # Play a sound at set frequency for set duration
         cf.param.set_value('sound.freq', str(frequency))
-        time.sleep(0.1) 
-        actual_freq = cf.param.get_value('sound.freq')  # Check the applied value
-        cf.param.set_value('sound.effect', '2')
+        cf.param.set_value('sound.effect', str(number))
         time.sleep(duration)  
-        #cf.param.set_value('sound.effect', '0')
+        cf.param.set_value('sound.effect', '0')
         del(cf)
         
-        return BuzzerResponse(success=True, message="Buzzer triggered: " + str(actual_freq))
+        return BuzzerResponse(success=True, message="Buzzer triggered: " + str(frequency))
 
     def buzzer_server(self):
         rospy.Service('play_buzzer', Buzzer, self.handle_buzzer_request)
