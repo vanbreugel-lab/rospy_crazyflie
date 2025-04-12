@@ -187,6 +187,10 @@ class Server:
         pub_options = rospy.get_param('~pub_ext_pos')
         if pub_options['enable']:
             log.log_ext_pos(pub_options['period_in_ms'])
+            
+        pub_options = rospy.get_param('~pub_batterystate')
+        if pub_options['enable']:
+            log.log_battery(pub_options['period_in_ms'])
 
     def run(self):
         while not rospy.is_shutdown():

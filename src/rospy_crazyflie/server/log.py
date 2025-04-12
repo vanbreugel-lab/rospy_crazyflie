@@ -303,6 +303,17 @@ class Log:
         self._ext_pos_config.add_variable('ext_pos.Y', 'float')
         self._ext_pos_config.add_variable('ext_pos.Z', 'float')
         self._cf.log.add_config(self._ext_pos_config)
+        
+        self._batterystate_pub = rospy.Publisher(
+            self._name + '/BatteryState',
+            BatteryState,
+            queue_size=100
+        )
+        # print("BatteryState log config")
+        self._batterystate_config = cfLogConfig(name='BatteryState', period_in_ms=100)
+        self._batterystate_config.data_received_cb.add_callback(self._batterystate_cb)
+        self._batterystate_config.add_variable('pm.vbat', 'float')
+        self._cf.log.add_config(self._batterystate_config)
 
     def _addLogConfig_cb(self, goal):
         """ Implements the AddLogConfig Action"""
@@ -375,6 +386,7 @@ class Log:
         self.stop_log_motion()
         self.stop_log_ext_pos()
         #self.stop_log_controller()
+        self.stop_log_battery()
 
 
     def log_controller_rpy_rate(self, period_in_ms=100):
@@ -456,6 +468,11 @@ class Log:
         """ Starts ExtPos log config """
         self._ext_pos_config.period_in_ms = period_in_ms
         self._ext_pos_config.start()
+        
+    def log_battery(self, period_in_ms=100):
+        """ Starts BatteryState log config """
+        self._batterystate_config.period_in_ms = period_in_ms
+        self._batterystate_config.start()
     
     def stop_log_controller_rpy_rate(self):
         """ Stops ControllerRPYRate log config"""
@@ -520,6 +537,10 @@ class Log:
     def stop_log_ext_pos(self):
         """ Stops ExtPos log config """
         self._ext_pos_config.stop()
+        
+    def stop_log_battery(self):
+        """ Stops BatteryState log config """
+        self._batterystate_config.stop()
          
     def _controller_rpy_rate_cb(self, timestamp, data, logconfig):
         """ Callback from CrazyflieLibPython, publishes ControllerRPYRate messages """
@@ -733,3 +754,12 @@ class Log:
         msg.Y = data['ext_pos.Y']
         msg.Z = data['ext_pos.Z']
         self._ext_pos_pub.publish(msg)
+        
+        
+    def _batterystate_cb(self, timestamp, data, logconfig):
+        """ Callback from CrazyflieLibPython, publishes BatteryState messages """
+        msg = BatteryState()
+        msg.stamp = rospy.get_rostime()
+        msg.cfstamp = timestamp
+        msg.vbat = data['pm.vbat']
+        self._batterystate_pub.publish(msg)

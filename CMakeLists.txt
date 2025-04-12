@@ -71,7 +71,7 @@ catkin_python_setup()
    Motion.msg
    ExtPos.msg
    #Controller.msg
-
+   BatteryState.msg
  )
 
 ## Generate services in the 'srv' folder
